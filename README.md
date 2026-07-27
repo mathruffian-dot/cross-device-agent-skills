@@ -7,7 +7,7 @@
 
 | 技能 | 口令 | 做什麼 |
 |------|------|--------|
-| `project-init` | 「初始化專案」 | 為專案建立藍圖（agents.md）＋交接檔（handoff.md），有 GitHub 就順便建私有 repo，有 Obsidian 就建詳細筆記 |
+| `project-init` | 「初始化專案」 | 為專案建立藍圖（AGENTS.md）＋交接檔（handoff.md），有 GitHub 就順便建私有 repo，有 Obsidian 就建詳細筆記 |
 | `startup` | 「開工」 | 讀藍圖＋交接檔，回報上次做到哪（含「上次在哪台電腦收工」）、git 狀態、建議下一步 |
 | `shutdown` | 「收工」 | 更新藍圖進度、改寫交接檔、git commit + push、詳細紀錄寫進 Obsidian |
 
@@ -17,13 +17,13 @@
 
 | 層級 | 需要安裝 | 你會得到 |
 |------|---------|---------|
-| **L1 本地** | 什麼都不用（建議專案放 Google 雲端硬碟資料夾） | `agents.md`＋`handoff.md`，跨電腦靠雲端硬碟同步 |
+| **L1 本地** | 什麼都不用（建議專案放 Google 雲端硬碟資料夾） | `AGENTS.md`＋`handoff.md`，跨電腦靠雲端硬碟同步 |
 | **L2 +GitHub** | [GitHub CLI](https://cli.github.com/)（`gh auth login` 登入） | 版本控制＋雲端備份，貼網址就能分享專案 |
 | **L3 +Obsidian** | Obsidian＋Obsidian MCP | 專案詳細筆記（第二大腦） |
 
 三層資訊的讀取頻率不同——這是整套設計的核心：
 
-- `agents.md`＋`handoff.md`：**每個 session 都讀**（放交接必需的精簡資訊）
+- `AGENTS.md`＋`handoff.md`：**每個 session 都讀**（放交接必需的精簡資訊）
 - GitHub：**指定才讀**（備份與歷史）
 - Obsidian：**有需要才讀**（完整脈絡與細節）
 
@@ -36,6 +36,8 @@ git clone https://github.com/mathruffian-dot/cross-device-agent-skills.git
 把 `project-init/`、`startup/`、`shutdown/` 三個資料夾複製到你的全域技能目錄：
 
 - Claude Code：`~/.claude/skills/`
+
+> **用 OpenCode 的話請改用 [cross-device-agent-skills-opencode](https://github.com/mathruffian-dot/cross-device-agent-skills-opencode)**——那一版的安裝路徑、權限設定與 shell 語法都已經對齊 OpenCode，SOP 內容相同。
 
 然後跟你的 Agent 說一句：
 
@@ -63,7 +65,7 @@ git clone https://github.com/mathruffian-dot/cross-device-agent-skills.git
 
 ## 兩個核心檔案
 
-- **`agents.md`**（專案藍圖）：用 AGENTS.md 開放標準命名——Claude Code、Codex、Gemini CLI、OpenCode 都讀得懂，換 Agent 不用改檔案
+- **`AGENTS.md`**（專案藍圖）：用 AGENTS.md 開放標準命名——Claude Code、Codex、Gemini CLI、OpenCode 都讀得懂，換 Agent 不用改檔案
 - **`handoff.md`**（交接檔）：記錄「目前做到哪／下一步／注意事項／**最後更新者＋電腦名＋有沒有 push**」。不管是**換電腦**還是**換 Agent** 接手，都先讀這個檔
 
 範本在 `project-init/templates/`，初始化技能會自動套用。

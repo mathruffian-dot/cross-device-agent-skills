@@ -20,7 +20,7 @@
 
 | 層級 | 平台 | 位置 | 讀取時機 |
 |------|------|------|---------|
-| L1 | 本地（GDrive） | `agents.md`＋`handoff.md` | 每個 session |
+| L1 | 本地（GDrive） | `AGENTS.md`＋`handoff.md` | 每個 session |
 | L2 | GitHub | <未啟用｜<你的GitHub帳號>/repo-name> | 指定時 |
 | L3 | Obsidian | <未啟用｜資料夾名/專案工作流程.md> | 有需要時 |
 

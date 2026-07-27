@@ -17,9 +17,9 @@ description: 開工接續助手（三層級自動偵測）。當使用者說「�
 
 ## 層級偵測（開工看「這個專案」建到哪層）
 
-- **L1**：專案有 `agents.md`／`handoff.md` → 讀
+- **L1**：專案有 `AGENTS.md`／`handoff.md` → 讀
 - **L2**：專案有 `.git` → 做 git 檢查
-- **L3**：`agents.md` 同步層級表登記了 Obsidian 路徑，且 Obsidian MCP 可用 → 列出筆記路徑（不主動讀）
+- **L3**：`AGENTS.md` 同步層級表登記了 Obsidian 路徑，且 Obsidian MCP 可用 → 列出筆記路徑（不主動讀）
 
 > 注意：偵測依據是「專案有什麼」，不是「電腦有什麼」。低層級電腦打開高層級專案時做得到的照做、做不到的註明（優雅降級）。
 
@@ -27,13 +27,13 @@ description: 開工接續助手（三層級自動偵測）。當使用者說「�
 
 ### L1：讀藍圖與交接檔（永遠執行）
 
-1. **讀 `agents.md`**：專案目標、路線圖進度、工作約定（摘要，不全文倒出）
+1. **讀 `AGENTS.md`**：專案目標、路線圖進度、工作約定（摘要，不全文倒出）
 2. **讀 `handoff.md`**：上次做到哪、目前狀態、下一步、注意事項
 3. **檢查「最後更新」欄**：
    - 若**更新者的電腦名 ≠ 這台電腦**（PowerShell 比對 `$env:COMPUTERNAME`）→ 特別標示「⚠️ 上次在另一台電腦（名稱）收工」，並確認 GDrive 同步已完成（看 handoff.md 檔案時間戳是否與交接檔內時間吻合；若本地檔案明顯過舊，提醒等 GDrive 同步完再開工）
    - 若 handoff.md 的更新時間比 agents.md 舊很多 → 提醒「上次可能沒有正式收工」
 
-**Fallback（舊專案相容）**：若專案沒有 `agents.md`／`handoff.md`：
+**Fallback（舊專案相容）**：若專案沒有 `AGENTS.md`／`handoff.md`：
 - 有 Obsidian MCP → 改讀 `<vault>/<資料夾名>/專案工作流程.md` 或 `工作筆記.md` 的「上次做到哪」段
 - 讀完提議：「這個專案還沒有 agents.md＋handoff.md，要不要用『初始化專案』補建？」（提議即可，不主動建）
 
@@ -77,7 +77,7 @@ description: 開工接續助手（三層級自動偵測）。當使用者說「�
 ## 不該做的事
 
 - ❌ 主動 `git pull`（會撞本地未 commit 變動）
-- ❌ 修改 `agents.md`／`handoff.md`／Obsidian 筆記（那是收工的事）
+- ❌ 修改 `AGENTS.md`／`handoff.md`／Obsidian 筆記（那是收工的事）
 - ❌ 沒有交接檔時硬建一個（先問使用者）
 - ❌ 開工就把 Obsidian 筆記全文讀進來（違反「有需要才讀」的分層設計）
 - ❌ 把藍圖與交接檔內容**全文倒出來**（要摘要、保持精簡）
@@ -95,6 +95,5 @@ description: 開工接續助手（三層級自動偵測）。當使用者說「�
 ## 注意事項
 
 - 所有訊息使用**繁體中文**
-- 本 skill 在 `~/.claude-skills/`，搭配 chezmoi 跨電腦同步；修改後記得 `chezmoi re-add ~/.claude-skills/startup/SKILL.md`
 - 若與全域 CLAUDE.md 的文字版 SOP 重疊：**以本 skill 為準**（skill 是顯性觸發、文字 SOP 是 fallback）
 

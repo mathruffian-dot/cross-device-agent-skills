@@ -9,7 +9,7 @@ description: 收工同步助手（三層級自動偵測）。當使用者說「�
 
 | 層級 | 收工動作 | 給誰看 |
 |------|---------|--------|
-| L1 本地 | 更新 `agents.md` 進度＋改寫 `handoff.md` | 下一個 session 的任何 Agent、任何電腦 |
+| L1 本地 | 更新 `AGENTS.md` 進度＋改寫 `handoff.md` | 下一個 session 的任何 Agent、任何電腦 |
 | L2 GitHub | commit + push | 版本歷史＋雲端備份 |
 | L3 Obsidian | 詳細紀錄寫進 `專案工作流程.md` | 未來需要完整脈絡的自己 |
 
@@ -23,9 +23,9 @@ description: 收工同步助手（三層級自動偵測）。當使用者說「�
 
 ## 層級偵測（收工看「這個專案」建到哪層）
 
-- **L1**：專案有 `agents.md`／`handoff.md` → 更新（沒有就提議先跑「初始化專案」）
+- **L1**：專案有 `AGENTS.md`／`handoff.md` → 更新（沒有就提議先跑「初始化專案」）
 - **L2**：專案有 `.git` → commit + push
-- **L3**：`agents.md` 登記了 Obsidian 路徑，且這台電腦的 Obsidian MCP 可用 → 寫詳細紀錄
+- **L3**：`AGENTS.md` 登記了 Obsidian 路徑，且這台電腦的 Obsidian MCP 可用 → 寫詳細紀錄
 
 > 低層級電腦打開高層級專案：做得到的照做，做不到的在 handoff.md 註明（例：「本次在無 Obsidian 的電腦收工，L3 筆記未更新」），回到高層級電腦時補。
 
@@ -34,7 +34,7 @@ description: 收工同步助手（三層級自動偵測）。當使用者說「�
 ### L1：更新藍圖與交接檔（永遠執行）
 
 1. **盤點本次成果**：從對話歷史摘要——完成了哪些檔案、做了什麼決定、踩了什麼坑
-2. **更新 `agents.md`**：
+2. **更新 `AGENTS.md`**：
    - 路線圖 checklist：勾掉完成項、新增發現的待辦
    - 「資料夾結構」有新增檔案就補
 3. **改寫 `handoff.md`**（整份重寫，不是往下堆）：
@@ -63,13 +63,13 @@ description: 收工同步助手（三層級自動偵測）。當使用者說「�
 ### 回報（層級 checklist）
 
 ```
-✅ L1 本地：agents.md 進度已更新、handoff.md 已改寫（更新者：<Agent> @ <電腦名>）
+✅ L1 本地：AGENTS.md 進度已更新、handoff.md 已改寫（更新者：<Agent> @ <電腦名>）
 ✅ L2 GitHub：<repo> 已 commit + push（<commit 標題>）
 ✅ L3 Obsidian：專案工作流程.md 已補紀錄
 ⚠️ 手動處理：<例：本次新增了 ~/.xxx_api_key，另一台電腦要手動建>
 ```
 
-沒做到的項目用 ⚠️ 或 ❌ 並說明原因。若本次改過 `~/.claude/`／`~/.claude-skills/` 的全域設定或技能，提醒跑 chezmoi 同步（`chezmoi re-add` ＋ push）。
+沒做到的項目用 ⚠️ 或 ❌ 並說明原因。若本次改過全域設定或技能（技能目錄不在專案 repo 裡），提醒使用者那些變更不會跟著專案走，換電腦要自己再裝一次。
 
 ## 不該做的事
 
@@ -92,5 +92,4 @@ description: 收工同步助手（三層級自動偵測）。當使用者說「�
 
 - 所有訊息使用**繁體中文**
 - GDrive 內的 repo 首次操作若遇 git 寫入錯誤：`git config windows.appendAtomically false`
-- 本 skill 在 `~/.claude-skills/`，搭配 chezmoi 跨電腦同步；修改後記得 `chezmoi re-add ~/.claude-skills/shutdown/SKILL.md`
 
