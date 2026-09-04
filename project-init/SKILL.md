@@ -1,6 +1,6 @@
-﻿---
+---
 name: project-init
-description: 專案初始化技能（三層級自動偵測）。當使用者說「初始化專案」、「專案初始化」、「幫這個專案做初始化」、「開新專案」、「建立專案藍圖」、「幫我 init 專案」等要為當前資料夾建立專案基礎建設的請求時，請一定要使用此技能。本技能會依這台電腦的工具鏈自動建到最高可用層級：L1 本地（AGENTS.md + handoff.md）→ L2 GitHub（git init + 私有 repo）→ L3 Obsidian（專案詳細筆記）。
+description: 專案初始化技能（三層級自動偵測）。當使用者說「初始化專案」、「專案初始化」、「幫這個專案做初始化」、「開新專案」、「建立專案藍圖」、「幫我 init 專案」等要為當前資料夾建立專案基礎建設的請求時，請一定要使用此技能。本技能會依這台電腦的工具鏈自動建到最高可用層級：L1 本地（AGENTS.md + handoff.md）→ L2 GitHub（私有 repo）→ L3 Obsidian（專案詳細筆記）。
 ---
 
 # 專案初始化技能（三層級自動偵測）
@@ -9,15 +9,14 @@ description: 專案初始化技能（三層級自動偵測）。當使用者說�
 
 一套技能、三個層級。**這台電腦裝了什麼工具，就自動建到哪個層級**——不用問使用者「你要第幾層級」。
 
-三層資訊的定位與讀取頻率不同：
-
 | 層級 | 平台 | 建立的東西 | 讀取時機 |
 |------|------|-----------|---------|
-| L1 本地 | 專案資料夾（建議放 GDrive） | `AGENTS.md`（專案藍圖）＋`handoff.md`（交接檔） | **每個 session 都讀** |
+| L1 本地 | 專案資料夾（建議放在你的雲端硬碟資料夾） | `AGENTS.md`（專案藍圖）＋`handoff.md`（交接檔） | **每個 session 都讀** |
 | L2 GitHub | 私有 repo | git 版本控制＋雲端備份 | 指定才讀 |
 | L3 Obsidian | 第二大腦 vault | `專案工作流程.md`（詳細筆記） | 有需要才讀 |
 
-> 為什麼藍圖叫 `AGENTS.md` 而不是 `CLAUDE.md`？因為 AGENTS.md 是跨 Agent 開放標準——Claude Code、Codex、Gemini CLI、OpenCode 都讀得懂。專案層的檔案刻意用開放格式，任何 Agent 接手都能無縫工作。
+> 為什麼藍圖叫 `AGENTS.md` 而不是 `CLAUDE.md`？因為 AGENTS.md 是跨 Agent 開放標準——OpenCode、Claude Code、Codex、Gemini CLI 都讀得懂。專案層的檔案刻意用開放格式，任何 Agent 接手都能無縫工作。
+> **檔名必須全大寫 `AGENTS.md`**：Windows 不分大小寫所以寫錯也能動，但 Mac／Linux 分大小寫，小寫的 `agents.md` 會變成「檔案明明在、Agent 卻讀不到」。
 
 ## 層級偵測（初始化看「這台電腦」有什麼）
 
@@ -25,7 +24,8 @@ description: 專案初始化技能（三層級自動偵測）。當使用者說�
 
 1. **L1**：無條件可建
 2. **L2**：跑 `gh auth status`，成功（已登入 GitHub CLI）→ 可建
-3. **L3**：Obsidian MCP 工具（`mcp__obsidian__*`）可用 → 可建
+3. **L3**：目前有可用的 Obsidian MCP 工具（能列目錄、建立筆記的工具）→ 可建
+   - 請依「你手上實際有哪些工具」判斷，不要假設特定的工具名稱
 
 檢查完先告訴使用者：「這台電腦可初始化至第 N 層級」，再開始執行。
 
@@ -35,20 +35,85 @@ description: 專案初始化技能（三層級自動偵測）。當使用者說�
 
 1. **掃描資料夾現況**：列出既有檔案，若已有 `AGENTS.md` 或 `handoff.md` → 停下來問使用者是否要覆蓋
 2. **詢問使用者**：專案名稱、一句話目標、關鍵時程（沒有就留白，不要硬編）
-3. **建立 `AGENTS.md`**：用 `templates/AGENTS.template.md` 為底，填入實際內容；「資料夾結構」區塊由掃描結果自動生成
-4. **建立 `handoff.md`**：用 `templates/handoff.template.md` 為底，「目前做到哪」填「專案初始化完成」，更新者填 Agent 名＋電腦名（PowerShell 用 `$env:COMPUTERNAME` 取得）
-5. 若路徑含「雲端硬碟」或「My Drive」→ 提醒使用者確認 Google 雲端硬碟桌面版的同步圖示已打勾（檔案要真的躺在雲端，換電腦才拿得到）
+3. **建立 `AGENTS.md`**：用下方範本為底，填入實際內容；「資料夾結構」區塊由掃描結果自動生成
+4. **建立 `handoff.md`**：用下方範本為底，「目前做到哪」填「專案初始化完成」，更新者填 Agent 名＋電腦名
+   - 電腦名：Windows（PowerShell）用 `$env:COMPUTERNAME`；Mac／Linux 用 `hostname`
+5. 若路徑含「雲端硬碟」「My Drive」「Google Drive」→ 提醒使用者確認雲端硬碟桌面版的同步圖示已打勾（檔案要真的躺在雲端，換電腦才拿得到）
 
-### L2：GitHub（gh 已登入才做，否則跳過並註明）
+#### 範本：`AGENTS.md`
 
-6. **git 初始化**：
-   ```bash
-   git init
-   git config user.email "<你的email>"
-   git config user.name "<你的GitHub帳號>"
-   git config windows.appendAtomically false   # GDrive 上跑 git 的必要設定，避免寫入錯誤
-   ```
-7. **建立 `.gitignore`**（GDrive 專用）：
+```md
+# <專案名稱>（專案藍圖）
+
+> 本檔為跨 Agent 通用的專案藍圖（AGENTS.md 開放標準）。任何 Agent 的每個 session 都應先讀本檔＋`handoff.md`。
+
+## 專案簡介
+<!-- 一段話：這個專案是什麼、目標是什麼 -->
+
+## 關鍵時程
+<!-- 格式：- 事件名稱：日期（說明）；沒有就留白 -->
+
+## 目標與路線圖
+<!-- 用 checklist 追蹤，收工技能會更新這裡 -->
+- [ ] 階段一：
+- [ ] 階段二：
+
+## 資料夾結構
+<!-- 初始化時自動掃描生成，之後新增檔案要更新 -->
+
+## 同步層級（本專案初始化至第 N 層級）
+
+| 層級 | 平台 | 位置 | 讀取時機 |
+|------|------|------|---------|
+| L1 | 本地（雲端硬碟資料夾） | `AGENTS.md`＋`handoff.md` | 每個 session |
+| L2 | GitHub | <未啟用｜<你的 GitHub 帳號>/repo-name> | 指定時 |
+| L3 | Obsidian | <未啟用｜專案資料夾名/專案工作流程.md> | 有需要時 |
+
+## 工作約定
+- 任何 Agent、任何電腦：**開工先讀 `handoff.md`，收工必更新 `handoff.md`**
+- 修改共用檔案前先讀最新內容，避免覆蓋其他 Agent 的變更
+- 所有回應與文件使用繁體中文
+- 修改前先確認計畫，優先保留原有資料結構
+
+## 安全與隱私（不可違反）
+- **不把 API key、密碼、憑證寫進 repo**，也不要貼進 `AGENTS.md`／`handoff.md`；一律放 `.env` 並列入 `.gitignore`
+- **學生資料只用座號**，不出現姓名、學號、班級以外的個資、照片或聯絡方式
+- 要公開分享前，先確認檔案裡沒有上述兩類內容
+```
+
+#### 範本：`handoff.md`
+
+```md
+# 交接檔（handoff.md）
+
+> 任何 Agent、任何電腦接手前**必讀**；收工時**必更新**。本檔只放交接必需的精簡資訊，詳細脈絡放 Obsidian（若有 L3）。
+
+## ⏯️ 目前做到哪
+<!-- 最後完成的動作，1-3 句 -->
+專案初始化完成。
+
+## 🚦 目前狀態
+<!-- 可運行嗎？哪些做一半？ -->
+
+## ➡️ 下一步
+1.
+
+## ⚠️ 注意事項
+<!-- 坑、暫時 workaround、不要動的東西 -->
+
+## 🕐 最後更新
+- 時間：<YYYY-MM-DD HH:mm>
+- 更新者：<Agent 名> @ <電腦名>
+- Git push：<✅ 已推｜❌ 未推（原因）｜—（本專案未啟用 git）>
+```
+
+### L2：GitHub（`gh` 已登入才做，否則跳過並註明）
+
+> 這一層的 git／GitHub 設定**不在本技能重寫**：完整做法請依懶人包 **07-github** 那一包。
+> 本技能只負責「呼叫它、然後回填藍圖」。
+
+6. 確認 `gh auth status` 通過（沒過就跳過 L2，並告訴使用者「先跑懶人包 07-github」）
+7. 先建立 `.gitignore`（避免把敏感檔推上去，這是唯一在本技能處理的 git 相關動作）：
    ```
    desktop.ini
    *.tmp
@@ -57,18 +122,15 @@ description: 專案初始化技能（三層級自動偵測）。當使用者說�
    *.key
    credentials.*
    ```
-8. **初始 commit**：`git add .` → `git commit -m "初始化專案：<專案名稱>"`
-9. **建立私有 repo**：問使用者偏好的英文 repo 名，然後
-   ```bash
-   gh repo create <你的GitHub帳號>/<repo-name> --private --source=. --push
-   ```
-10. **回填 `AGENTS.md`** 同步層級表的 GitHub 欄（repo 網址）
+8. 依懶人包 **07-github** 的做法，把這個資料夾變成 GitHub 上的**私有** repo 並推上去
+   （repo 的英文名字要先問使用者）
+9. **回填 `AGENTS.md`** 同步層級表的 GitHub 欄（repo 網址）
 
 ### L3：Obsidian（MCP 可用才做，否則跳過並註明）
 
-11. 在 vault 根目錄建立與專案資料夾**同名**的資料夾
-12. 建立 `<資料夾名>/專案工作流程.md`，內容包含：專案背景與詳細脈絡、決策紀錄（為什麼這樣做）、素材與相關筆記連結、🕳️ 踩坑筆記、🗓️ 最近更動紀錄表格（第一行寫今天的初始化）
-13. **回填 `AGENTS.md`** 同步層級表的 Obsidian 欄（vault 內路徑）
+10. 在 vault 根目錄建立與專案資料夾**同名**的資料夾
+11. 建立 `<專案資料夾名>/專案工作流程.md`，內容包含：專案背景與詳細脈絡、決策紀錄（為什麼這樣做）、素材與相關筆記連結、🕳️ 踩坑筆記、🗓️ 最近更動紀錄表格（第一行寫今天的初始化）
+12. **回填 `AGENTS.md`** 同步層級表的 Obsidian 欄（vault 內路徑）
 
 ### 回報
 
@@ -77,19 +139,20 @@ description: 專案初始化技能（三層級自動偵測）。當使用者說�
 ```
 🏗️ 本專案初始化至第 N 層級
 ✅ L1 本地：AGENTS.md ＋ handoff.md
-✅ L2 GitHub：<你的GitHub帳號>/<repo>（私有）
+✅ L2 GitHub：<你的 GitHub 帳號>/<repo>（私有）
 ⚠️ L3 Obsidian：未建（這台電腦沒有 Obsidian MCP，之後可在有 Obsidian 的電腦說「補建第三層級」）
 ```
 
 ## 不該做的事
 
 - ❌ 未經確認就覆蓋既有的 `AGENTS.md`／`handoff.md`
-- ❌ 電腦沒 gh／Obsidian 時報錯中斷（正確行為：跳過該層級、在回報中註明原因）
+- ❌ 把藍圖檔名寫成小寫 `agents.md`（Mac／Linux 會讀不到）
+- ❌ 電腦沒 `gh`／Obsidian 時報錯中斷（正確行為：跳過該層級、在回報中註明原因）
 - ❌ 把 `.env`、API key 之類敏感檔 commit 進 git
 - ❌ 建 public repo（預設一律 private，使用者明說才轉公開）
 
 ## 注意事項
 
 - 所有訊息與檔案內容使用**繁體中文**
+- Windows＋雲端硬碟資料夾內跑 git 若遇寫入錯誤：`git config windows.appendAtomically false`
 - 之後的日常循環交給搭檔技能：開工（startup）讀、收工（shutdown）寫
-
